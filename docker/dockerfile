@@ -1,0 +1,17 @@
+# Use an official PostgreSQL image
+FROM phidata/pgvector:16
+
+# Set environment variables
+ENV POSTGRES_DB=ai
+ENV POSTGRES_USER=ai
+ENV POSTGRES_PASSWORD=ai
+ENV PGDATA=/var/lib/postgresql/data/pgdata
+
+# Create a volume for PostgreSQL data
+VOLUME /var/lib/postgresql/data
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Set the default command to run PostgreSQL
+CMD ["postgres"]

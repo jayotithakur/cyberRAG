@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: phidata/pgvector:16
+    container_name: postgres_pgvector
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: embeddings  # Set the database name here
+    ports:
+      - "5431:5432"  # Expose PostgreSQL on port 5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data  # Persist data between container restarts
+      - ./sql/init_pgvector.sql:/docker-entrypoint-initdb.d/init_pgvector.sql  # Script to create pgvector extension
+    networks:
+      - pg_network
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"  # Access pgAdmin UI from localhost:5050
+    networks:
+      - pg_network
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  pg_network:
+    driver: bridge
